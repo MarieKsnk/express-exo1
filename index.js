@@ -3,6 +3,9 @@ import actors from "./data/actors.js";
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extented: true }));
+
 app.get("/", (req, res) => {
   res.send("Hello world");
 });
@@ -18,6 +21,17 @@ app.get("/actors/:id", (req, res) => {
     return res.status(404).json({ message: "Not found" });
   }
   return res.status(200).json(actorByID);
+});
+
+app.post("/actors", (req, res) => {
+  const { name, genre } = req.body;
+  const newActor = {
+    id: actors.length + 1,
+    name,
+    genre,
+  };
+  actors.push(newActor);
+  return res.status(201).json(newActor);
 });
 
 app.listen(3000, () => {
